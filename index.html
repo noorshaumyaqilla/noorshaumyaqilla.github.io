@@ -208,25 +208,27 @@
       border: 1px solid var(--border);
     }
     .btn-outline:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-1px); }
-    /* ── DROPDOWN ── */
+    /* ── DROPDOWN (CLICK & UPWARD POP) ── */
     .dropdown {
       position: relative;
       display: inline-block;
     }
     .dropdown-content {
-      display: none;
+      display: none; /* Hidden by default */
       position: absolute;
-      top: calc(100% + 0.5rem); /* Pushes it down slightly from the button */
+      bottom: calc(100% + 0.5rem); /* Pops UP instead of down */
+      top: auto;
       left: 0;
       background: var(--surface);
       min-width: 150px;
       border: 1px solid var(--border);
       border-radius: 4px;
-      z-index: 999; /* Ensures it stays on top of all other elements */
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6); /* Stronger shadow for depth */
-      padding: 0.25rem 0; /* Adds space above the first and below the last option */
+      z-index: 999;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.6); /* Shadow adjusted to point up */
+      padding: 0.25rem 0;
     }
-    .dropdown:hover .dropdown-content {
+    /* JavaScript will add this class to show it */
+    .dropdown-content.show {
       display: flex;
       flex-direction: column;
     }
@@ -238,15 +240,16 @@
       text-decoration: none;
       letter-spacing: 0.08em;
       transition: background 0.2s, color 0.2s;
-      border-bottom: 1px solid var(--border); /* Visual separator between options */
+      border-bottom: 1px solid var(--border);
     }
     .dropdown-item:last-child {
-      border-bottom: none; /* Removes the line under the last option */
+      border-bottom: none;
     }
     .dropdown-item:hover {
       background: var(--surface2);
       color: var(--amber);
     }
+    
     .hero-scroll {
       position: absolute;
       bottom: 2rem;
@@ -719,12 +722,14 @@
     <p class="hero-sub">Building real-world software, one commit at a time.</p>
     <div class="hero-actions">
       <a href="#projects" class="btn btn-primary">View Projects →</a>
+      <!-- Dropdown Container -->
       <div class="dropdown">
-        <button class="btn btn-outline">Get in touch ↓</button>
-        <div class="dropdown-content">
+        <button class="btn btn-outline" id="contactBtn" onclick="toggleDropdown()">Get in touch ↑</button>
+        <div class="dropdown-content" id="contactDropdown">
           <a href="mailto:noorshaumy@gmail.com" class="dropdown-item">Email</a>
           <a href="https://www.linkedin.com/in/YOUR_LINKEDIN_PROFILE" class="dropdown-item" target="_blank">LinkedIn</a>
         </div>
+      </div>
       </div>
       <a href="https://drive.google.com/file/d/19iwmoYew1bcb5FFBp6MHqrcAXlzPc5oD/view?usp=sharing" target="_blank" class="btn btn-outline">Download CV ↓</a>
     </div>
@@ -1255,6 +1260,20 @@
       });
     }, { threshold: 0.1 });
     reveals.forEach(el => observer.observe(el));
+    // Toggle the contact dropdown
+    function toggleDropdown() {
+      document.getElementById("contactDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks anywhere outside of it
+    window.addEventListener('click', function(event) {
+      if (!event.target.matches('#contactBtn')) {
+        const dropdown = document.getElementById("contactDropdown");
+        if (dropdown && dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    });
   </script>
 
 </body>
